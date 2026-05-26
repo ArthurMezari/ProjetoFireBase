@@ -34,12 +34,13 @@ export default function AddProduto() {
             placeholderTextColor={'#000'}
             value={nome}
             onChangeText={setNome}
-            styles={styles.txtInput}
+          
             />
 
             <TextInput
             placeholder="Valor"
             placeholderTextColor={'#000'}
+            value={valor}
             onChangeText={setValor}
             />
 

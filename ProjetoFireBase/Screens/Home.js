@@ -1,69 +1,76 @@
-import { View, Text, StyleSheet, Image, ScrollView, Button, FlatList } from 'react-native';
-import {useState, useEffect} from "react";
-import { database } from '../FirebaseConfig';
+import { View, Text, StyleSheet, Button, FlatList} from 'react-native';
+import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 
-
+import { database } from '../FirebaseConfig';
+import CardProduct from '../Components/Card';
 
 export default function Home({ navigation }) {
 
-    // const motorista = drivers[0]
     const [produtos, setProdutos] = useState([]);
 
     useEffect(() => {
-        async function carregarProdutos() {
+        async function carregarProduto() {
             try {
+
                 const querySnapshot = await getDocs(collection(database, 'produtos'));
-                const lista = []
+                const lista = [];
                 querySnapshot.forEach((doc) => {
-                    lista.push({id: doc.id, ...doc.data()})
-                })
-                setProdutos(lista)
+                    lista.push({ id: doc.id, ...doc.data() });
+                });
+                setProdutos(lista);
             } catch (error) {
-                console.log('Erro ao buscar no banco', error)
+                console.log("Erro ao buscar produtos: ", error);
             }
         }
-        carregarProdutos();
-    })
+
+        carregarProduto();
+    }, []);
+
     return (
+        <View style={styles.container}>
+            <Text style={styles.txt}>Produtos</Text>
+            <View style={styles.card}>
+                <FlatList
+                    data={produtos}
+                    renderItem={({ item }) => (
+                        <CardProduct
+                            nome={item.nome}                                                        
+                            valor={item.valor}
+                            imagem={item.imagem}
+                        />
+                    )}
+                    keyExtractor={item => item.id}
+                />
+            </View>
 
-        <View>
-
-            <Text style={styles.txt}>Nome</Text>
-            <FlatList
-            data={produtos}
-            renderItem={({item}) => (
-                <View>
-                    <Text>
-                        
-                    </Text>
-            )}
-            }
-            <Button title="Add Produto" color="#000"
-                onPress={() => navigation.navigate('Add Produtos')} />
+            <Button
+                title="Add Produto"
+                color="#1900ff"
+                onPress={() => navigation.navigate('AddProduto')}
+            />
         </View>
-    )
-
-
+    );
 }
 
 const styles = StyleSheet.create({
-                container: {
-                justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#ffffffff',
-            gap: 20
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#ffffff',
+        gap: 20,
+        paddingTop: 40
     },
-            txt: {
-                fontSize: 20,
-            textAlign: 'justify'
+    txt: {
+        fontSize: 20,
+        textAlign: 'justify'
     },
-            img:{
-                width: 200,
-            height: 200
-    },
-            card:{
-                alignItems: 'center',
-      
+    card: {
+        alignItems: 'center',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        width: '100%'
     }
-})
+});
