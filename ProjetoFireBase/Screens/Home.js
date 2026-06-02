@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Button, FlatList} from 'react-native';
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 
 import { database } from '../FirebaseConfig';
 import CardProduct from '../Components/Card';
@@ -27,6 +27,20 @@ export default function Home({ navigation }) {
         carregarProduto();
     }, []);
 
+    async function ExcluirProdutos (id){
+        
+            try {
+                await deleteDoc(doc(database, 'produtos', id));
+                setProdutos(prev => prev.filter(p => p.id !== id));
+            } catch (error) {
+                Alert.alert('erro, não foi possível deletar o produto! ')
+            }
+        
+    }
+
+    function EditarProdutos(produto) {
+        navigation.navigate('EditProduct', {produto})
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.txt}>Produtos</Text>
@@ -38,6 +52,8 @@ export default function Home({ navigation }) {
                             nome={item.nome}                                                        
                             valor={item.valor}
                             imagem={item.imagem}
+                            Excluir={() => ExcluirProdutos(item.id)}
+                            Editar={() => EditarProdutos(item)}
                         />
                     )}
                     keyExtractor={item => item.id}

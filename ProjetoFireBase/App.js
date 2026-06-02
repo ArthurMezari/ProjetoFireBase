@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from './Screens/Login';
 import Home from './Screens/Home';
 import AddProduto from './Screens/AddProduto';
+import EditProduct from './Screens/EditProduct';
 
 function TabNavigate() {
   const Tab = createBottomTabNavigator();
@@ -14,6 +15,7 @@ function TabNavigate() {
     <Tab.Navigator>
   
       <Tab.Screen name="Home" component={Home}/>
+      
      
     </Tab.Navigator>
   )
@@ -31,6 +33,7 @@ export default function App() {
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Home" component={TabNavigate}/>
         <Stack.Screen name="AddProduto" component={AddProduto}/>
+        <Stack.Screen name="EditProduct" component={EditProduct}/>
         
 
       </Stack.Navigator>
